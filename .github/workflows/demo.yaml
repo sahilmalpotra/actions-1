@@ -1,19 +1,35 @@
-name: First-workflow
+# .github/workflows/simple-multi-job.yml
 
-on: push
+name: Simple Multi-Job CI
 
-jobs: 
-    first_job:
-        runs-on: ubuntu-latest
-        steps:
-            - name: check repo
-              uses: actions/checkout@v4
+on: [push]
 
-            - name: welcome message
-              run: echo "first action"
-            
-            - name: list files
-              run: ls
-              
-            - name: read file
-              run: cat README.md  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build the project
+        run: echo "🛠️ Building the project..."
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run tests
+        run: echo "✅ Running tests..."
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy
+        run: echo "🚀 Deploying the project..."
